@@ -36,24 +36,24 @@ The Model Context Protocol (MCP) is a system that lets AI apps, like Claude Desk
 
 ## What does this server do?
 
-As of not, the server provides read-only access to the Telegram API.
-
 - [x] Get the list of dialogs (chats, channels, groups)
 - [x] Get the list of (unread) messages in the given dialog
+- [x] Send a message
 - [ ] Mark chanel as read
 - [ ] Retrieve messages by date and time
 - [ ] Download media files
 - [ ] Get the list of contacts
-- [ ] Draft a message
 - ...
 
 ## Practical use cases
 
 - [x] Create a summary of the unread messages
+- [x] Send summary of the unread messages to another chat
 - [ ] Find contacts with upcoming birthdays and schedule a greeting
 - [ ] Find discussions on a given topic, summarize them and provide a list of links
 
 ## Prerequisites
+- Python 3.12 or higher. Miniconda is recommended [Miniconda](https://www.anaconda.com/download/success).
 
 - [`uv` tool](https://docs.astral.sh/uv/getting-started/installation/)
 
@@ -106,7 +106,7 @@ Configure Claude Desktop to recognize the Exa MCP server.
     {
       "mcpServers": {
         "mcp-telegram": {
-            "command": "mcp-server",
+            "command": "mcp-telegram",
             "env": {
               "TELEGRAM_API_ID": "<your-api-id>",
               "TELEGRAM_API_HASH": "<your-api-hash>",
@@ -117,9 +117,18 @@ Configure Claude Desktop to recognize the Exa MCP server.
     }
     ```
 
+### Windsurf Configuration
+
+1. Open the Windsurf.
+2. Click on the hammer icon in the Cascade sidebar on the right as shown in the image below.
+
+   <img src="docs/windsurf.jpg" alt="Windsurf" width="400"/>
+3. Paste JSON configuration above into the editor.
+
+
 ### Telegram Configuration
 
-Before working with Telegram’s API, you need to get your own API ID and hash:
+Before working with Telegram’s API, you need to get your own API ID and hash (see [Telegram API](https://core.telegram.org/api/obtaining_api_id)):
 
 1. Login to your Telegram account with the phone number of the developer account to use.
 1. Click under API Development tools.
@@ -207,3 +216,5 @@ Try the following:
 
 - Use the full path to the `uv` binary in the configuration file
 - Check the path to the cloned repository in the configuration file
+
+
