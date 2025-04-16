@@ -155,3 +155,69 @@ async def list_messages(
                 response.append(TextContent(type="text", text=message.text))
 
     return response
+
+
+### SendMessage ###
+
+
+class SendMessage(ToolArgs):
+    """
+    Send a message to a specific dialog, chat, or channel.
+    
+    The `dialog_id` is the ID of the dialog, chat, or channel to send the message to.
+    You can get this ID using the ListDialogs tool.
+    
+    The `message` is the text content to send.
+    """
+
+    dialog_id: int
+    message: str
+
+
+@tool_runner.register
+async def send_message(
+    args: SendMessage,
+) -> t.Sequence[TextContent | ImageContent | EmbeddedResource]:
+    client: TelegramClient
+    logger.info("method[SendMessage] args[%s]", args)
+
+    response: list[TextContent] = []
+    async with create_client() as client:
+        try:
+            # Verify that the dialog exists
+            entity = await client.get_entity(args.dialog_id)
+            
+            # Send the message
+            sent_message = await client.send_message(entity, args.message)
+            
+            if sent_message:
+                response.append(
+                    TextContent(
+                        type="text",
+                        text=f"Message sent successfully to {entity.title if hasattr(entity, 'title') else entity.first_name if hasattr(entity, 'first_name') else 'chat'} (ID: {args.dialog_id})",
+                    )
+                )
+            else:
+                response.append(
+                    TextContent(
+                        type="text",
+                        text=f"Failed to send message to dialog ID {args.dialog_id}. The message was accepted by the server but no message object was returned.",
+                    )
+                )
+        except ValueError as e:
+            response.append(
+                TextContent(
+                    type="text",
+                    text=f"Error: Dialog with ID {args.dialog_id} not found. {str(e)}",
+                )
+            )
+        except Exception as e:
+            logger.exception("Error sending message")
+            response.append(
+                TextContent(
+                    type="text",
+                    text=f"Error sending message: {str(e)}",
+                )
+            )
+
+    return response
