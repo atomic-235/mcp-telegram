@@ -60,7 +60,7 @@ The Model Context Protocol (MCP) is a system that lets AI apps, like Claude Desk
 ## Installation
 
 ```bash
-uv tool install git+https://github.com/sparfenyuk/mcp-telegram
+uv tool install git+https://github.com/atomic-235/mcp-telegram
 ```
 
 > [!NOTE]
